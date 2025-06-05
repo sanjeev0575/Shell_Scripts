@@ -1,0 +1,34 @@
+#Backs up important directories
+#Supports restoration
+#!/bin/bash
+
+BACKUP_DIR="/backup"
+SOURCE_DIR="/var/www/html"
+TIMESTAMP=$(date +"%F-%H-%M-%S")
+BACKUP_FILE="$BACKUP_DIR/backup-$TIMESTAMP.tar.gz"
+
+# Backup
+backup() {
+    echo "Starting backup..."
+    tar -czf $BACKUP_FILE $SOURCE_DIR
+    echo "Backup completed: $BACKUP_FILE"
+}
+
+# Restore
+restore() {
+    echo "Available backups:"
+    ls -lh $BACKUP_DIR
+    read -p "Enter backup file name to restore: " FILE
+    tar -xzf "$BACKUP_DIR/$FILE" -C /
+    echo "Restore completed."
+}
+
+echo "1. Backup"
+echo "2. Restore"
+read -p "Choose an option: " CHOICE
+
+case $CHOICE in
+    1) backup ;;
+    2) restore ;;
+    *) echo "Invalid option";;
+esac
