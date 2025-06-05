@@ -1,0 +1,14 @@
+#Check if a Service is Running
+#Monitors a service (like Nginx, MySQL)
+#Restarts if it’s down
+
+#!/bin/bash
+
+SERVICE="nginx"
+
+if systemctl is-active --quiet $SERVICE; then
+    echo "✅ $SERVICE is running"
+else
+    echo "⚠️ $SERVICE is not running, restarting..."
+    systemctl restart $SERVICE
+fi
