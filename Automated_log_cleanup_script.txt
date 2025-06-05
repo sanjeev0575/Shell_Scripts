@@ -1,0 +1,11 @@
+#Automated Log Cleanup Script
+#Deletes logs older than X days
+#Prevents server from filling up
+#!/bin/bash
+
+LOG_DIR="/var/log"
+DAYS=30
+
+echo "Cleaning logs older than $DAYS days in $LOG_DIR..."
+find $LOG_DIR -type f -name "*.log" -mtime +$DAYS -exec rm -f {} \;
+echo "Log cleanup completed."
