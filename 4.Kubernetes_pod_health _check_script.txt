@@ -1,0 +1,12 @@
+#Kubernetes Pod Health Check Script
+#Checks the status of all pods in a namespace
+#Alerts if any pod is in a failed state
+
+#!/bin/bash
+
+NAMESPACE="default"
+
+echo "Checking Kubernetes Pod Health..."
+kubectl get pods -n $NAMESPACE --no-headers | awk '$3 != "Running" {print "⚠️ Pod "$1" is in state "$3}'
+
+echo "Health Check Completed."
