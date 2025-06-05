@@ -1,0 +1,11 @@
+#Syncs local files to an S3 bucket
+#Helps in automated backups
+
+#!/bin/bash
+
+BUCKET_NAME="my-backup-bucket"
+SOURCE_DIR="/backup"
+
+echo "Syncing $SOURCE_DIR to S3 bucket $BUCKET_NAME..."
+aws s3 sync $SOURCE_DIR s3://$BUCKET_NAME --delete
+echo "Sync Completed!"
