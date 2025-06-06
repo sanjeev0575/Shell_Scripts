@@ -2,5 +2,5 @@
 #Helps identify large files consuming disk space
 #!/bin/bash
 
-echo "Top 5 largest files in the system:"
+echo "Top 5 largest files in the system :"
 find / -type f -exec du -h {} + 2>/dev/null | sort -rh | head -n 5
