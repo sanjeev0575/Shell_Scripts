@@ -1,0 +1,7 @@
+#Show Active SSH Sessions
+***************************************************
+#Displays who is logged in via SSH
+#!/bin/bash
+
+echo "Active SSH Sessions:"
+who | grep "pts"
