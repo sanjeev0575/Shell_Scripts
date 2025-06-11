@@ -1,0 +1,5 @@
+Lists active Docker containers
+#!/bin/bash
+
+echo "Running Docker containers:"
+docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}"
