@@ -1,0 +1,6 @@
+#Frees up space by deleting unused images
+#!/bin/bash
+
+echo "Deleting unused Docker images..."
+docker image prune -a -f
+echo "✅ Cleanup done!"
