@@ -1,0 +1,5 @@
+ Ensures all nodes are Ready
+#!/bin/bash
+
+echo "Checking Kubernetes Nodes..."
+kubectl get nodes | grep -v "Ready"
