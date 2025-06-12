@@ -1,0 +1,7 @@
+#Continuously watches for pod status changes
+#!/bin/bash
+
+NAMESPACE="default"
+
+echo "Monitoring pods in namespace: $NAMESPACE..."
+kubectl get pods -n $NAMESPACE --watch
