@@ -1,0 +1,87 @@
+#Trigger a Jenkins Job via CLI
+#Triggers a Jenkins job without opening the UI
+#!/bin/bash
+
+JENKINS_URL="http://localhost:8080"
+JOB_NAME="MyJob"
+USER="admin"
+API_TOKEN="your-api-token"
+
+echo "Triggering Jenkins job: $JOB_NAME..."
+curl -X POST "$JENKINS_URL/job/$JOB_NAME/build" --user "$USER:$API_TOKEN"
+echo "✅ Job triggered successfully!"
+
+#notes
+#You need a Jenkins user with API access and a valid API token.
+#If CSRF protection is enabled, you may need to get and pass a crumb token too.
+
+------------------------------
+#Script to trigger a parameterized Jenkins job:
+
+#!/bin/bash
+
+# Jenkins details
+JENKINS_URL="http://your-jenkins-url"
+JOB_NAME="your-job-name"
+USER="your-username"
+API_TOKEN="your-api-token"
+
+# Job parameters
+PARAMS="param1=value1&param2=value2"
+
+# Trigger the job
+curl -X POST "${JENKINS_URL}/job/${JOB_NAME}/buildWithParameters" \
+     --user "${USER}:${API_TOKEN}" \
+     --data "${PARAMS}"
+
+------------------------------------------------------
+
+#Step-by-step Script to Trigger + Check Status
+
+#!/bin/bash
+
+# Jenkins info
+JENKINS_URL="http://your-jenkins-url"
+JOB_NAME="your-job-name"
+USER="your-username"
+API_TOKEN="your-api-token"
+
+# Step 1: Trigger the job and get queue item
+QUEUE_URL=$(curl -s -X POST "${JENKINS_URL}/job/${JOB_NAME}/build" \
+    --user "${USER}:${API_TOKEN}" -i | grep -i Location | awk '{print $2}' | tr -d '\r\n')
+
+echo "Job queued at: $QUEUE_URL"
+
+# Step 2: Wait for Jenkins to assign a build number
+while : ; do
+    BUILD_INFO=$(curl -s --user "${USER}:${API_TOKEN}" "${QUEUE_URL}api/json")
+    EXECUTABLE_URL=$(echo "$BUILD_INFO" | grep -o '"executable":{"number":[0-9]*' | grep -o '[0-9]*')
+    if [ -n "$EXECUTABLE_URL" ]; then
+        BUILD_NUMBER=$EXECUTABLE_URL
+        echo "Build started: #$BUILD_NUMBER"
+        break
+    fi
+    echo "Waiting for build to start..."
+    sleep 3
+done
+
+# Step 3: Poll build status
+while : ; do
+    STATUS=$(curl -s --user "${USER}:${API_TOKEN}" \
+        "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}/api/json" | jq -r '.result')
+    
+    if [ "$STATUS" != "null" ]; then
+        echo "Build completed with status: $STATUS"
+        break
+    fi
+    echo "Build in progress..."
+    sleep 5
+done
+
+#Requirements:
+#jq for JSON parsing: install via sudo apt install jq or yum install jq.
+
+
+--------------------------------------------------------------------
+
+
