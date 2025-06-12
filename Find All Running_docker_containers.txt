@@ -3,3 +3,24 @@
 
 echo "Running Docker containers:"
 docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}"
+
+-----------------
+#Filtering by Name
+#You can filter the output to check for specific containers:
+
+#!/bin/bash
+
+container_name="my-container" # Replace with your container name
+
+if docker ps --filter "name=$container_name" --quiet > /dev/null; then
+  echo "Container '$container_name' is running."
+else
+  echo "Container '$container_name' is not running."
+fi
+
+
+#Explanation:
+
+#--filter "name=$container_name": Filters the list to include only containers with the specified name.
+#--quiet: Suppresses the default output of docker ps.
+#The command's exit code is used to determine if the container is running
