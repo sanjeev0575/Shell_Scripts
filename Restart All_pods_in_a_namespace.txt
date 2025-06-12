@@ -1,0 +1,8 @@
+#Restarts all pods in a given namespace
+#!/bin/bash
+
+NAMESPACE="default"
+
+echo "Restarting all pods in $NAMESPACE..."
+kubectl delete pods --all -n $NAMESPACE --grace-period=0 --force
+echo "✅ All pods restarted!"
