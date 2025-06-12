@@ -1,0 +1,10 @@
+#Fetches the last build status of a Jenkins job
+#!/bin/bash
+
+JENKINS_URL="http://localhost:8080"
+JOB_NAME="MyJob"
+USER="admin"
+API_TOKEN="your-api-token"
+
+echo "Fetching status of last build..."
+curl -s "$JENKINS_URL/job/$JOB_NAME/lastBuild/api/json" --user "$USER:$API_TOKEN" | jq -r '.result'
