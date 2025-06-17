@@ -1,0 +1,11 @@
+#Creates a tar backup of a specified directory
+#!/bin/bash
+
+SRC_DIR="/home/user/data"
+BACKUP_DIR="/home/user/backup"
+BACKUP_FILE="$BACKUP_DIR/backup-$(date +%F).tar.gz"
+
+mkdir -p $BACKUP_DIR
+tar -czvf $BACKUP_FILE $SRC_DIR
+
+echo "Backup completed: $BACKUP_FILE"
