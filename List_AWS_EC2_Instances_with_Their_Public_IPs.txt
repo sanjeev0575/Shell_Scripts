@@ -1,0 +1,7 @@
+#Uses AWS CLI to fetch all running EC2 instances.
+#Displays Instance ID and Public IP.
+
+#!/bin/bash
+
+echo "🔎 Fetching EC2 Instances..."
+aws ec2 describe-instances --query "Reservations[*].Instances[*].[InstanceId, PublicIpAddress]" --output table
