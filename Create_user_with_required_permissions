@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Function to set permissions
+set_permissions() {
+    local username=$1
+    local user_perms=$2
+    local group_perms=$3
+    local others_perms=$4
+    local user_home=$(eval echo ~$username)
+
+    # Set permissions for the user's home directory
+    chmod u=$user_perms,g=$group_perms,o=$others_perms $user_home
+
+    echo "Permissions set for $username:"
+    echo "User: $user_perms, Group: $group_perms, Others: $others_perms"
+    echo "Home directory: $user_home"
+}
+
+# Prompt for username
+read -p "Enter the username to create: " username
+
+# Check if the user already exists
+if id "$username" &>/dev/null; then
+    echo "User $username already exists."
+    exit 1
+fi
+
+# Create the user
+sudo useradd -m "$username"
+if [ $? -eq 0 ]; then
+    echo "User $username created successfully."
+else
+    echo "Failed to create user $username."
+    exit 1
+fi
+
+# Prompt for permissions
+echo "Set permissions for the user's home directory."
+read -p "Enter permissions for the user (e.g., rwx): " user_perms
+read -p "Enter permissions for the group (e.g., r-x): " group_perms
+read -p "Enter permissions for others (e.g., r--): " others_perms
+
+# Validate permissions input
+if [[ ! $user_perms =~ ^[r-][w-][x-]$ ]] || [[ ! $group_perms =~ ^[r-][w-][x-]$ ]] || [[ ! $others_perms =~ ^[r-][w-][x-]$ ]]; then
+    echo "Invalid permissions format. Use 'rwx', 'r-x', 'r--', etc."
+    exit 1
+fi
+
+# Set permissions
+set_permissions "$username" "$user_perms" "$group_perms" "$others_perms"
+
+echo "User $username setup completed."
