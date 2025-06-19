@@ -1,0 +1,19 @@
+#Backs up all running containers and saves all Docker images as tar files.
+
+#!/bin/bash
+
+BACKUP_DIR="/backup/docker"
+mkdir -p "$BACKUP_DIR"
+
+# Backup all running containers
+echo "🔄 Backing up running containers..."
+for container in $(docker ps -q); do
+    docker commit "$container" "$container-backup"
+    docker save -o "$BACKUP_DIR/$container.tar" "$container-backup"
+done
+
+# Backup all images
+echo "🔄 Saving all Docker images..."
+docker images -q | xargs -I {} docker save -o "$BACKUP_DIR/{}.tar" {}
+
+echo "✅ Docker backup completed. Files saved in $BACKUP_DIR"
